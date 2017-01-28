@@ -10,17 +10,10 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-/nachos/bin/
-/nachos/machine/
-/nachos/network/
-/nachos/ag/
-/nachos/security/
-/nachos/threads/
-/nachos/test/
-/nachos/userprog/
-/nachos/nachos.iml
-/nachos/Makefile
-/nachos/README
-/nachos/vm/
+
+# The files to exclude
 .idea/
 nachos/
+Projects.iml
+
+!/nachos/threads/KThread.java
