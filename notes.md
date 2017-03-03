@@ -642,3 +642,78 @@
 	2. If page is loaded, access memory
 	3. Else, page it in (find a free frame and schedule the page to be read)
 	4. Continue instruction execution
+
+# Fri, March 3
+## Exam Review
+* Ch1: Intro
+  * What is an OS?
+  * Types
+  * Computer operation: Interrupts/traps
+  * DMA
+  * Main memory
+  * VERY IMPORTANT: Hardware protection (the day that I missed)
+    1. CPU
+	2. Memory
+	3. IO
+  * Dual-mode of operation
+* Ch2: OS
+  * Services for programs
+  * System calls
+  * Communications
+* Ch3: Processes
+  * Concept
+  * Context-switch
+    * Stale
+  * Threads
+  * Operations
+    * Creation: Fork, exec
+	* Terminate: Exit, abort
+  * Cooperating processes
+    * Producer-consumer
+  * Interprocess communication
+    * Direct/indirect (message passing, mailbox)
+	* Symmetric/asymmetric
+  * Synchronization (send/receive)
+    * Blocking/non-blocking
+* Ch4: Threads
+  * Benefits/concepts
+  * Kernel/User threads
+  * MODELS: Many-to-one, one-to-one, many-to-many
+  * Issues: _Fork_ and exec
+  * Signal handling
+  * Tutorial/Java threads
+* Ch6: Process synchronization
+  * Race condition
+  * Critical section problem
+    * Properties of any solution
+	* Algorithms
+  * Synchronization primitives (atomic operations)
+    * Lock
+	* testAndSet
+	* Swap
+    * Semaphores
+	  * Different types of synch problems
+	  * Busy vs. non-busy waiting (Nachos)
+    * Deadlock & startvation
+	* Classic synch problem
+	  * Bounded buffer (semaphores)
+	  * Readers-writers (1st & 2nd)
+	  * Dining philosophers
+	* Condition variables
+	  * Definition
+	  * Compare to locks and semaphores
+	* Conditional critical region
+	  * How to implement using condition variables
+* Ch5: CPU Scheduling
+  * Goal: Maximize CPU business
+  * IO/CPU burst
+  * CPU scheduling & and the scheduler
+  * Conditions for preemptive vs non-preemptive
+  * Scheduling criteria
+  * Scheduling algorithms
+    * FCFS (non-preemptive)
+	* SJF (Shortest job first)
+	  * Could be preemptive or non-preemptive
+	* Priority (preemptive, non-preemptive)
+	  * Priority inversion
+    * Round-robin
