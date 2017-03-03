@@ -5,7 +5,7 @@ import nachos.machine.Machine;
 import nachos.machine.TCB;
 
 /**
- * A KThread is a thread that can be used to execute Nachos kernel code. Nachos
+ * A KThread is a thread that can be used to execute kernel code. Nachos
  * allows multiple threads to run concurrently.
  * <p>
  * To create a new thread of execution, first declare a class that implements
@@ -31,6 +31,9 @@ import nachos.machine.TCB;
  */
 public class KThread
 {
+    private boolean isJoined = false;
+    private static ThreadQueue sleeping = ThreadedKernel.scheduler.newThreadQueue(false);
+
     /**
      * Get the current thread.
      *
@@ -209,13 +212,13 @@ public class KThread
         Lib.assertTrue(toBeDestroyed == null);
         toBeDestroyed = currentThread;
 
-
         currentThread.status = statusFinished;
 
-        sleep();
         KThread next;
-        if ((next = readyQueue.nextThread()) != null)
-            next.restoreState();
+        if ((next = sleeping.nextThread()) != null)
+            next.ready();
+
+        KThread.sleep();
     }
 
     /**
@@ -298,11 +301,20 @@ public class KThread
      */
     public void join()
     {
+        if (status == statusFinished || isJoined)
+            return;
         Lib.debug(dbgThread, "Joining to thread: " + toString());
 
         Lib.assertTrue(this != currentThread);
 
-        readyQueue.acquire(currentThread);
+        boolean intStatus = Machine.interrupt().disable();
+
+        sleeping.waitForAccess(currentThread);
+        isJoined = true;
+        KThread.sleep();
+
+        Machine.interrupt().restore(intStatus);
+
     }
 
     /**

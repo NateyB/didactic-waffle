@@ -1,9 +1,5 @@
 package nachos.threads;
 
-import nachos.machine.Lib;
-
-import java.util.LinkedList;
-
 /**
  * A <i>communicator</i> allows threads to synchronously exchange 32-bit
  * messages. Multiple threads can be waiting to <i>speak</i>,
@@ -22,25 +18,26 @@ public class Communicator
     /**
      * The speaker conditional variable
      */
-    private Condition sVariable = new Condition(moving);
+    private Condition2 sVariable = new Condition2(moving);
 
     /**
      * The listener conditional variable
      */
-    private Condition lVariable = new Condition(moving);
+    private Condition2 lVariable = new Condition2(moving);
 
-    private int numSpeakers = 0;
-
+    /**
+     * The number of listeners waiting
+     */
     private int numListeners = 0;
 
     /**
      * The boolean indicating if a word has been spoken
      */
-    private boolean ready = false;
+    private boolean inSpeech = false;
 
     /**
      * The word that was spoken, to be communicated to listener.
-     *
+     * <p>
      * As an interesting side note, this could actually be a security issue: I don't waste the computational
      * power to reset this word after passing the message; therefore, it might be able to be accessed by the
      * next listener.
@@ -69,18 +66,14 @@ public class Communicator
         if (!moving.isHeldByCurrentThread())
             moving.acquire();
 
-        while (numListeners == 0)
-            KThread.sleep();
+        while (numListeners == 0 || inSpeech)
+            sVariable.sleep();
 
+        inSpeech = true;
         spokenWord = word;
-        ready = true;
 
-        lVariable.wakeAll();
-        numSpeakers--;
-
+        lVariable.wake();
         moving.release();
-
-
     }
 
     /**
@@ -96,18 +89,21 @@ public class Communicator
 
         numListeners++;
 
-        while (!ready)
-        {
-            sVariable.wakeAll();
-            KThread.sleep();
+        while (!inSpeech) {
+            sVariable.wake();
+            lVariable.sleep();
         }
 
-        ready = false;
+
+        int word = spokenWord;
+        inSpeech = false;
         numListeners--;
 
+        // Wake all of the remaining speakers to ensure that the process continues
+        sVariable.wakeAll();
         moving.release();
 
-        return spokenWord;
+        return word;
 
     }
 }

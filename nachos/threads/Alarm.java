@@ -11,14 +11,13 @@ import java.util.Map;
  */
 public class Alarm
 {
-
     private HashMap<KThread, Long> wakeUpMap = new HashMap<KThread, Long>();
 
     /**
      * Allocate a new Alarm. Set the machine's timer interrupt handler to this
      * alarm's callback.
      * <p>
-     * <p><b>Note</b>: Nachos will not function correctly with more than one
+     * <p><b>Note</b>: will not function correctly with more than one
      * alarm.
      */
     public Alarm()
@@ -40,12 +39,21 @@ public class Alarm
      */
     public void timerInterrupt()
     {
-        KThread.yield();
+        boolean intStatus = Machine.interrupt().disable();
+
+
         for (Map.Entry<KThread, Long> pair : wakeUpMap.entrySet())
         {
             if (pair.getValue() < Machine.timer().getTime())
-                pair.getKey().ready();
+            {
+                KThread toWake = pair.getKey();
+                wakeUpMap.remove(toWake);
+                toWake.ready();
+            }
         }
+        KThread.yield();
+
+        Machine.interrupt().restore(intStatus);
     }
 
     /**
@@ -53,19 +61,19 @@ public class Alarm
      * waking it up in the timer interrupt handler. The thread must be
      * woken up (placed in the scheduler ready set) during the first timer
      * interrupt where
-     * <p>
-     * <p><blockquote>
-     * (current time) >= (WaitUntil called time)+(x)
-     * </blockquote>
+     * {@code (current time) >= (WaitUntil called time)+ x}
      *
      * @param x the minimum number of clock ticks to wait.
      * @see nachos.machine.Timer#getTime()
      */
     public void waitUntil(long x)
     {
+        boolean intStatus = Machine.interrupt().disable();
+
         long wakeTime = Machine.timer().getTime() + x;
         wakeUpMap.put(KThread.currentThread(), wakeTime);
         KThread.sleep();
 
+        Machine.interrupt().restore(intStatus);
     }
 }

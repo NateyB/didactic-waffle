@@ -61,11 +61,9 @@ public class Condition2
         boolean intStatus = Machine.interrupt().disable();
 
         if (!sleeping.isEmpty())
-            sleeping.getFirst().ready();
+            sleeping.pop().ready();
 
         Machine.interrupt().restore(intStatus);
-
-
     }
 
     /**
@@ -75,6 +73,12 @@ public class Condition2
     public void wakeAll()
     {
         Lib.assertTrue(conditionLock.isHeldByCurrentThread());
+        boolean intStatus = Machine.interrupt().disable();
+
+        while (!sleeping.isEmpty())
+            wake();
+
+        Machine.interrupt().restore(intStatus);
     }
 
     private Lock conditionLock;
