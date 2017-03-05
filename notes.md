@@ -283,6 +283,35 @@
 	        remainder
 	      } while (true)
 
+# Fri, February 10
+* Synchronization primitives
+  * Semaphores: Have an integer value, and con only be accessed through two
+    atomic operations:
+	* Wait (P): `wait(S) { while (S <= 0); S--; }` (bad because busy-watiting)
+	* Signal (V): `signal(S) { S++; }`
+	* Typically, but not necessarily, initialized to 1
+	* Mutual exclusion (S <-- 1): `do {wait(S); C-section signal(S) remainder}
+	  while (true);`
+* Synchronization problem
+  * P1, P2 concurrent with statements S1, S2, respectively. Execute S2 only
+    after S1.
+  * Solution: P1, P2 share a semaphore <-- 0; `P1: S1 signal(synch); P2
+    wait(synch) S2;`
+  * A deadlock affects a _set_ of threads
+  * Starvation, however, is only one process (waiting indefinitely within a
+    synch primitive)
+* Condition variable
+  * Synch primitive without a value, but threads may still be queued on them
+  * Associated with a lock
+  * All operations can only be used when holding the lock
+  * Operations:
+    * Sleep: Release the lock and sleep on this condition variable until some
+	  other thread wakes it; acquire the lock before returning from sleep
+	  Note: Semaphore: Wait only sleeps thread if value is nonpositive;
+	        Lock: Acquire only sleeps if the lock is busy
+	* Wake: Wakes at most one thread sleeping on the lock
+	* WakeAll: Wakes all the threads sleeping on the condition variable
+
 # Mon, February 13
 * Conditional Variables
   * No value
