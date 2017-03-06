@@ -1,3 +1,191 @@
+# Mon, January 9
+* OS
+  1. Program that manages computer hardware
+  2. Provides basis for applications and programs
+  3. Intermediary between user and hardware
+* Diverse in accomplishing tasks
+  * Maximize hardware utilization --> Optimize hardware utilization
+  * PC OS: Support complex games, business apps, and anything in-between
+  * Some OSes designed for efficiency, others for convenience, etc.
+* Computing Systems
+  * 4 major components: Users, apps/compilers/etc., OS, Hardware
+  * "OS is similar to government"
+  * Different points of view:
+    * User view: Varies according to interface
+	  * PC OS: Originally designed for one user to monopolize resources;
+	    Goal: Ease of use
+	  * Mainframe/Clusters/Supercomputers: Maximize resource utilization; user
+	    sits at a terminal; fair task scheduling, etc.
+	  * Mobile Devices: More limited computer; energy efficiency, etc.
+    * System view:
+	  * OS is the program most involved with the hardware --> resource allocator
+	    * Resources: CPU time, memory space, file storage/space
+		  * OS acts as a manager: May face conflicting requests
+		  * Resource allocation is _very important_
+	  * Defining OS: No universally accepted definition
+	    * The one piece of software for controlling and operating a computer
+		  system
+		* Simple viewpoint: Everything that the vendor ships when you order one
+		* The one program running at all times (the **kernel**)
+* Computer organization
+  * Powerup: Need initial program to run (_bootstrap program_)
+    * Initializes registers, device controllers, memory
+	* Must be local & loads OS into memory
+	* OS starts executing first process (init) and waits for _events_
+	  * Events are _signaled_ by an _interrupt_
+	    (hardware/software: system call/trap)
+	  * Most OSes are _interrupt driven_, but the alternative is _polling_,
+	    which is horrible
+	  * When the CPU is interrupted, it stop what it's doing & transfers
+	    execution to a fixed location, which contains the starting address of
+		the _service routine_
+	  * Interrupt vector: A vector of interrupts' starting addresses
+	  * Interrupts must be serviced quickly and the start of the CPU must
+	    be saved
+	  * Interrupts may have priorities (interrupt masking)
+
+# Wed, January 11
+* Computer organization (continued)
+  * Storage structure
+    * Programs in RAM: Only large storage area CPU can access
+	* CPU accesses memory through load/store (memory <-> register)
+  * Typical instruction execution
+    * Fetch instruction from memory --> instruction register
+	* Decode instruction; may have to get stuff from memory
+	* Execute instruction: Result may have to be stored in memory
+  * Memory is very important
+    * Memory unit only sees addresses: Does not know the origin of their genesis
+	* Programs/data may not reside in main memory
+	  * Main memory is too small to store all data & programs
+	  * Main memroy is volatile
+	* Therefore, secondary storage
+	  * Primary requirement: Hold large quantities of data permanently
+  * I/O Structure
+    * Many types of IO devices (memory among them)
+	* CPU and device controllers connected through a common bus
+	* Operation:
+	  * Start IO: Loading registers in device controllers; device examines
+	    register and peforms action
+	  * Transfer data
+	  * Upon completion, interrupt
+	  * Problem: This method could cause large overhead when moving large
+	    blocks of data
+	  * Solution: Direct Memory Access
+* Computer System Architectures: Classified by # of processors and how used
+  * Simple processor: One CPU (executing instructions)
+  * Multiprocessor systems:
+    1. Throughput: Speedup by ratio slightly less than N processors
+	2. Economy at scale: Ability to share peripherals
+	3. Reliability: One can fail, the system does not shut down
+	* SMP: Symmetric multiprocessing (Windows, Linux, macOS)
+	  * Each processor runs identical copies of the OS
+	  * Processors communicate as needed
+	* AMP: Asymmetric multiprocessing (Sun OS v4)
+	  * Each processor has a specific task
+	* Clustered system: Supercomputers/HPC
+	  * Individual systems coupled together & closely linked through LAN
+
+# Fri, January 13
+* OS Structure
+  * Provide environment within which programs execute
+  * Share common features
+    * Multiprogramming: Increases CPU utilization by organizing jobs so that the
+	  CPU always has time to execute—otherwise, it would be very difficult to
+	  maximize CPU usage
+	  * Multiprogrammed systems: 1960s–Present
+	    * Job scheduling allows multiprogramming
+		  * Ideas
+		    * OS keeps several jobs in memory
+			* OS picks one & starts execution
+			  * If a job waits for IO, then CPU switches to another job
+			  * Eventually, job finishes waiting and interrupts the CPU to
+			    regain control
+		  * CPU never idle as long as there is a job
+		  * First time the OS has to make decisions for the user
+		    * Fairly sophisticated
+			* CPU scheduling
+			* Safe environment: Processes should not be able to affect others
+			  negatively
+	  * Time sharing systems: 1970s–Present (UNIX)
+	    * Logical extension of multiprogramming
+		* CPU switches jobs so frequently so that users can interract with
+		  programs while they run
+		* User interacts with system (keyboard, screen)
+		* User gives commands and expects short response times
+		* If all jobs are switched fast enough, each user is given the
+		  impression that the system is dedicated to their use
+* OS Interface
+  * Command interpreter (shell)
+    * User enters command manually
+	* Bourne, C, Bourne Again SHell, Kain Shell
+	* All provide similar functionality
+  * GUI
+    * Desktop metahore (user-friendly)
+	* Keyboard, mouse, touchscreen
+	* From research facility XEROX PARC in the 1970s (they created ethernet,
+	  OOP, "great great things")
+	* Apple Macintosh first one in 1980
+	* Windows V1–1985
+	  * Extended MS-DOS prompt; legal challenges from Apple
+	* Windwos V2 (1987), V3 (1990), and many others after that
+  * Communication
+    * Message passing (A sends to OS, OS sends to B)
+	* Shared memory (A sends to shared, shared sends/is read by B)
+
+# Wed, January 18
+* Timesharing (continued)
+  * OS makes sure timer is set to interrupt
+  * Clearly instructions to modify timer are privileged
+  * We can control how long a program can run
+  * Program calls yield (non-preemptive)
+  * Timer interrupts (preemtpive)
+  * Transfer control to OS (privileged mode)
+    * OS prepares system for next job (context-switch)
+  * I/O Protection => [I/O Instructions privileged]
+  * Memory protection: Memory unit will check whether address is "valid"
+* OS components/structures
+  * Process management (process control)
+    * Process => Instance of a program in execution
+  * Create/Delete (user/system processes)
+  * Suspending/resuming processes
+  * Process synchronization (semaphore)
+  * Process communication
+  * Avoid deadlock (wait event, signal event)
+  * Main memory management
+    * Main memory => Central to operations of a computing system
+	* Repository of quickly accessible data
+	* Must keep more than one program in memory
+	* Functions
+	  * Keep track of which portions of memory are being used by which programs
+	  * Deciding which process to load in memory when space is available
+	  * Allocating or deallocating space as needed
+
+
+# Fri, January 20
+## Processes: Chapter 3
+* Process: Instance of program in execution; a unit of work
+  * All the processes can run concurrently
+  * Parts: More than program code; also include
+    * Program counter
+	* Process stack (temporary data, method parameters, local variables)
+	* Data section of a program
+* Process state: Processes change state while executing:
+  * new --admitted--> ready
+  * ready --scheduled/dispatched--> running
+  * running --exit--> terminated
+    running --I/O or wait for event--> waiting
+	running --interrupt--> ready
+  * waiting --I/O or event completion--> ready
+* One process running/CPU, but many ready/waiting
+* PCB: Process control block; representation of a process in OS
+  * Pointer; state; number; program counter; registers; memory limits; other
+    resources (like files)
+* Switching processes: A context switch saves the current process and
+  loads the next process
+* Process scheduling
+  * Schedules for CPU & IO
+  * CPU scheduler: Must be fast
+
 # Mon, January 23
 * UNIX
   * Exact duplicate of processes can be made with the fork() command,
@@ -169,62 +357,80 @@
     * Thread creation does _not_ equal thread execution; we call `start()` and
       the JVM will call `run()` for us
 
+# Fri, February 3
+## Chapter 6: Process Synchronization
+* Example: Problem/issue with concurrent execution of counter++ and counter--
+  in the producer-consumer problem
+* Concurrent execution of statements (high-level language) is equivalent to
+  a sequential execution of lower-level instructions (could be interweaved
+  in an arbitrary order)
+* Race condition: Outcome of execution depends on the particular order in
+  which access to shared resources takes place
+  * Solution: Ensure that only one process at a time can be manipulating
+    critical (shared) variables
+* Critical Section Problem
+  * Consider n process {P_0, P_1, ..., P_{n - 1}}
+  * Each process has a segment of code called its critical section in which
+    shared resources are being accessed
+  * When one process is executing its critical section, no other process is
+    allowed to execute its critical section; they are mutually exlusive in time
+
 # Mon, February 6
-* C-section problem
+* Critical (C-)section problem
   * Design a protocol that processes use to cooperate
-  * Each process must requuest permission to enter its critical section
-  * Permissiion request done in entry section
-  * Critical section may be followed by an exit section
-  * Remaining code => Remainder section
-* Typical process:
-      Do {
-        entry section
-        critical section
-        exit section
-        remainder section
-      } while (true)
-* Any solution must satisfy these requirements
-  1. Mutual exclusion: If P_i executing C-section, no other P_j is (i ≠ j)
-  2. Progress: If no process is executing its C-section, and some processes
-     wish to enter their critical sections, then only those processes
-     **not** executing in their remainder section can participate in the
-     decision and the selection cannot be postponed indefinitely
-  3. Bounded waiting: There exists a bound on the number of times that other
-     processes are allowed to enter their C-section after a process has made
-     a request and before the request is granted
-* 2-Process Solutions (Proposed) (These algorithms are horribly lacking detail):
-  1. First solution (the turn variable is shared):
-         do {
-           while (turn ≠ i)
-             critical_section
+    * Each process must request permission to enter its critical section
+    * Permission request done in entry section
+    * Critical section may be followed by an exit section
+    * Remaining code => Remainder section
+  * Typical process:
+        Do {
+          entry section
+          critical section
+          exit section
+          remainder section
+        } while (true)
+  * Any solution must satisfy these three requirements
+    1. Mutual exclusion: If P_i executing C-section, no other P_j is (i ≠ j)
+    2. Progress: If no process is executing its C-section, and some processes
+       wish to enter their critical sections, then only those processes
+       **not** executing in their remainder section can participate in the
+       decision and the selection cannot be postponed indefinitely
+    3. Bounded waiting: There exists a bound on the number of times that other
+       processes are allowed to enter their C-section after a process has made
+       a request and before the request is granted
+  * 2-Process Solutions (Proposed) (These algorithms are lacking detail):
+    1. First solution (the turn variable is shared):
+           do {
+             while (turn ≠ i)
+               critical_section
+               turn = j
+               remainder_section
+           } while (true)
+      * Mutual exclusion: Satisfied
+      * Progress: Not satisfied
+    2. Boolean flag[2]
+           do {
+             flag[i] = true
+             while flag[j]
+               C-section
+             flag[i] = false
+             remainder
+           } while (true)
+      * Mutual exclusion: Satisfied
+      * Progress: Not satisfied
+    3. Peterson's Solution (two processes) (turn, flag[])
+           do {
+             flag[i] = true
              turn = j
-             remainder_section
-         } while (true)
-    * Mutual exclusion: Satisfied
-    * Progress: Not satisfied
-  2. Boolean flag[2]
-         do {
-           flag[i] = true
-           while flag[j]
-             C-section
-           flag[i] = false
-           remainder
-         } while (true)
-    * Mutual exclusion: Satisfied
-    * Progress: Not satisfied
-  3. Peterson's Solution (two processes) (turn, flag[])
-         do {
-           flag[i] = true
-           turn = j
-           while (flag[j] && turn = j)
-             C-section
-           flag[i] = false
-           remainder
-         } while (true)
-    * Mutual exclusion: Satisfied
-    * Progess: Satisfied
-    * Bounded waiting: Satisfied
-  4. Bakery's Algorithm (n processes): Numbered tickets & waiting
+             while (flag[j] && turn = j)
+               C-section
+             flag[i] = false
+             remainder
+           } while (true)
+      * Mutual exclusion: Satisfied
+      * Progess: Satisfied
+      * Bounded waiting: Satisfied
+    4. Bakery's Algorithm (n processes): Numbered tickets & waiting
 * Synchronization primitives
   * Lock
     * Two states: Busy/free
@@ -456,6 +662,33 @@
       3. A process switches from waiting to ready (I/O completed)
       4. A process terminates (process completed)
     * 1 & 4 form non-preemptive CPU scheduling
+
+# Fri, February 17
+## Chapter 5: CPU Scheduling
+* Scheduling criteria
+  * Maximize
+    * CPU Utilization: 0–100
+	* Throughput (measure of work): #processes/time
+  * Minimize
+    * Turnaround time: Time from submission to time of completion
+	  * Sum of (wait to load) + (wait to be ready) + (execution time) + (IO)
+	* Waiting time: Time waiting in ready queue
+	* Response time: Time from time of submission to time of first response
+* Scheduling algorithms
+  * Consider 1 CPU burst/process for simplicity
+  * First-come first-served (FCFS): Exactly what it sounds like. Non-preemptive
+  * Shortest Job First (SJF)
+    * FCFS used to break ties
+	* Optimal (minimum average waiting time for a set of processes)
+	* Problem: Determining the next CPU burst is impossible
+	* Solution: Approximate burst time
+	  * T_{n + 1} = a*t_n + (1 - a)*T_n; T <-- predicted, t <-- actual
+	* Preemptive version: Shortest remaining time first (based on arrival)
+  * Priority scheduling
+    * SJF is a special case of priority scheduling
+	* A priority is assigned to each process
+	* CPU is allocated to process with highest priority
+	* Equal priority processes are scheduled in FCFS fashion
 
 # Mon, February 20
 * Pre-emptive/non-preemptive
