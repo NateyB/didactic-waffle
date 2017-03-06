@@ -4,7 +4,7 @@
   2. Provides basis for applications and programs
   3. Intermediary between user and hardware
 * Diverse in accomplishing tasks
-  * Maximize hardware utilization --> Optimize hardware utilization
+  * Maximize hardware utilization → Optimize hardware utilization
   * PC OS: Support complex games, business apps, and anything in-between
   * Some OSes designed for efficiency, others for convenience, etc.
 * Computing Systems
@@ -18,7 +18,7 @@
 	    sits at a terminal; fair task scheduling, etc.
 	  * Mobile Devices: More limited computer; energy efficiency, etc.
     * System view:
-	  * OS is the program most involved with the hardware --> resource allocator
+	  * OS is the program most involved with the hardware → resource allocator
 	    * Resources: CPU time, memory space, file storage/space
 		  * OS acts as a manager: May face conflicting requests
 		  * Resource allocation is _very important_
@@ -36,7 +36,7 @@
 	    (hardware/software: system call/trap)
 	  * Most OSes are _interrupt driven_, but the alternative is _polling_,
 	    which is horrible
-	  * When the CPU is interrupted, it stop what it's doing & transfers
+	  * When the CPU is interrupted, it stops what it's doing & transfers
 	    execution to a fixed location, which contains the starting address of
 		the _service routine_
 	  * Interrupt vector: A vector of interrupts' starting addresses
@@ -50,11 +50,11 @@
     * Programs in RAM: Only large storage area CPU can access
 	* CPU accesses memory through load/store (memory <-> register)
   * Typical instruction execution
-    * Fetch instruction from memory --> instruction register
+    * Fetch instruction from memory → instruction register
 	* Decode instruction; may have to get stuff from memory
 	* Execute instruction: Result may have to be stored in memory
   * Memory is very important
-    * Memory unit only sees addresses: Does not know the origin of their genesis
+    * Memory unit only sees addresses: Does not know their origin or genesis
 	* Programs/data may not reside in main memory
 	  * Main memory is too small to store all data & programs
 	  * Main memroy is volatile
@@ -138,7 +138,7 @@
   * Clearly instructions to modify timer are privileged
   * We can control how long a program can run
   * Program calls yield (non-preemptive)
-  * Timer interrupts (preemtpive)
+  * Timer interrupts (preemptive)
   * Transfer control to OS (privileged mode)
     * OS prepares system for next job (context-switch)
   * I/O Protection => [I/O Instructions privileged]
@@ -170,12 +170,13 @@
 	* Process stack (temporary data, method parameters, local variables)
 	* Data section of a program
 * Process state: Processes change state while executing:
-  * new --admitted--> ready
-  * ready --scheduled/dispatched--> running
-  * running --exit--> terminated
-    running --I/O or wait for event--> waiting
-	running --interrupt--> ready
-  * waiting --I/O or event completion--> ready
+  * new --admitted→ ready
+  * ready --scheduled/dispatched→ running
+  * running
+    * --exit→ terminated
+    * --I/O or wait for event→ waiting
+	* --interrupt→ ready
+  * waiting --I/O or event completion→ ready
 * One process running/CPU, but many ready/waiting
 * PCB: Process control block; representation of a process in OS
   * Pointer; state; number; program counter; registers; memory limits; other
@@ -195,35 +196,34 @@
 * Windows
   * There is another option, which allows a new program to be loaded to
   the process' memory. This call is execlp(); only Windows supports both
-
-## Process termination
-* (Under normal circumstances), when a process finishes executing
-  * Asks the OS to delete it (and deallocate resources) using to exit()
-  * At this point, the process may return data (such as exit code) to parent
-  * _All_ resources deallocated
-* Termination may also occur under additional circumstances
-  * Process may terminate other process using the abort() system call
-    * Typically, the process must be a parent to do that
-  * Occurs when a child exceeds its use of resources, is no longer relevant,
-    or the parent expires
-* Cooperating Processes
-  * Classification concurrently running processes
-  * Independent: Cannot be affected by or affect other programs
-  * Cooperating: Can affect or be affected by other programs
-    * Benefits:
-      * Data sharing, modularity, speed-up, convenience, etc.
-  * Concurrency requires communication & synchronization
-    * Producer-consumer problem: Paradigm for cooperating processes
-      * Producer produces information that is consumed by a consumer process
-      * Examples: Print, a compiler
-      * Need a buffer of items that can be filled by a producer and emptied
-        by a consumer
-      * Issue: Producer may produce an item while a consumer wants to use it
-        * Okay for producer to make an item while consumer is using a different
-          one
-    * Unbounded-buffer producer-consumer problem: No limit on buffer size
-      * No need for producers to wait
-    * Bounded buffer: Fixed size; both must wait at some point
+* Process termination
+  * (Under normal circumstances), when a process finishes executing
+    * Asks the OS to delete it (and deallocate resources) using to exit()
+    * At this point, the process may return data (such as exit code) to parent
+    * _All_ resources deallocated
+  * Termination may also occur under additional circumstances
+    * Process may terminate other process using the abort() system call
+      * Typically, the process must be a parent to do that
+    * Occurs when a child exceeds its use of resources, is no longer relevant,
+      or the parent expires
+  * Cooperating Processes
+    * Classification concurrently running processes
+    * Independent: Cannot be affected by or affect other programs
+    * Cooperating: Can affect or be affected by other programs
+      * Benefits:
+        * Data sharing, modularity, speed-up, convenience, etc.
+    * Concurrency requires communication & synchronization
+      * Producer-consumer problem: Paradigm for cooperating processes
+        * Producer produces information that is consumed by a consumer process
+        * Examples: Print, a compiler
+        * Need a buffer of items that can be filled by a producer and emptied
+          by a consumer
+        * Issue: Producer may produce an item while a consumer wants to use it
+          * It's okay for producer to make an item while consumer is using a
+		    different one
+      * Unbounded-buffer producer-consumer problem: No limit on buffer size
+        * No need for producers to wait
+      * Bounded buffer: Fixed size; both must wait at some point
 
 # Fri, January 27
 * Synchronization
@@ -234,8 +234,8 @@
     * Operations
       * Send
       * Receive
-          * Fixed-length messages -> Easy to implement, more difficult to use
-          * Variable-length -> Difficult to implement, more powerful
+          * Fixed-length messages → Easy to implement, more difficult to use
+          * Variable-length → Difficult to implement, more powerful
     * A communication link must exist between two communicating processes
       * Direct or indirect communication
       * Symmetric/Asymmetric
@@ -299,7 +299,7 @@
       * Implemented by a library (NO support from the kernel)
       * Advantage: Fast compared to create/manage compared to kernel threads
       * Drawback: If kernel is single-threaded and user-level kernel makes a
-                  blocking system call, then the **entire process blocks**
+        blocking system call, then the **entire process blocks**
     * Kernel threads
       * Supported directly by kernel (kernel => thread creation/execution
         scheduling)
@@ -369,7 +369,7 @@
   * Solution: Ensure that only one process at a time can be manipulating
     critical (shared) variables
 * Critical Section Problem
-  * Consider n process {P_0, P_1, ..., P_{n - 1}}
+  * Consider n process {P_0, P\_1, ..., P_{n - 1}}
   * Each process has a segment of code called its critical section in which
     shared resources are being accessed
   * When one process is executing its critical section, no other process is
@@ -401,18 +401,18 @@
   * 2-Process Solutions (Proposed) (These algorithms are lacking detail):
     1. First solution (the turn variable is shared):
            do {
-             while (turn ≠ i)
-               critical_section
-               turn = j
-               remainder_section
+             while (turn ≠ i);
+             critical_section
+             turn = j
+             remainder_section
            } while (true)
       * Mutual exclusion: Satisfied
       * Progress: Not satisfied
     2. Boolean flag[2]
            do {
              flag[i] = true
-             while flag[j]
-               C-section
+             while flag[j];
+             C-section
              flag[i] = false
              remainder
            } while (true)
@@ -422,8 +422,8 @@
            do {
              flag[i] = true
              turn = j
-             while (flag[j] && turn = j)
-               C-section
+             while (flag[j] && turn == j);
+             C-section
              flag[i] = false
              remainder
            } while (true)
@@ -449,30 +449,31 @@
 	     }
     * We return the value that we test, and then set to true (side-effects)
     * Mutual exclusion using `TestAndSet`
-         do {
-	   while (TestAndSet(lock));
-	   C-section
-	   lock = false
-	   remainder
-	 } while (true)
-    * Solution to critical section prolem : bool waiting[], bool key, lock
-         do {
-	   waiting[i] = true
-	   key = true
-	   while (waiting[i] && key)
-	     key = TestAndSet(lock)
-	   waiting[i] = false
-	   C-section
-	 } while (true)
+          do {
+	        while (TestAndSet(lock));
+	        C-section
+	        lock = false
+	        remainder
+	      } while (true)
+    * Solution to critical section prolem:
+	      bool waiting[], bool key, lock
+          do {
+	        waiting[i] = true
+	        key = true
+	        while (waiting[i] && key)
+	          key = TestAndSet(lock)
+	        waiting[i] = false
+	        C-section
+	      } while (true)
     * Bounded waiting
           j ← (i + 1) % n
-	        while (j ≠ i && ¬waiting[j])
-	          j ← (j + 1) % n
-	        if (j == i)
-	   lock = false
-	 else
-	   waiting[j] ← false
-	 remainder
+	      while (j ≠ i && ¬waiting[j])
+	        j ← (j + 1) % n
+	      if (j == i)
+	        lock ← false
+	      else
+	        waiting[j] ← false
+	      remainder
   * Swap
          void swap(boolean &a, boolean &b) {
 	       boolean temp = a;
@@ -512,9 +513,9 @@
   * All operations can only be used when holding the lock
   * Operations:
     * Sleep: Release the lock and sleep on this condition variable until some
-	  other thread wakes it; acquire the lock before returning from sleep
+	  other thread wakes it; acquire the lock before returning from sleep.
 	  Note: Semaphore: Wait only sleeps thread if value is nonpositive;
-	        Lock: Acquire only sleeps if the lock is busy
+	  Lock: Acquire only sleeps if the lock is busy
 	* Wake: Wakes at most one thread sleeping on the lock
 	* WakeAll: Wakes all the threads sleeping on the condition variable
 
@@ -533,7 +534,7 @@
     * Three semaphores
       * Mutex for buffer access, initialized to 1
       * Empty buffers: Initialized to n
-      * Full bfyyers: Initialized to 0
+      * Full buffers: Initialized to 0
     * Producer
            do {
              ... produce an item ...
@@ -624,7 +625,7 @@
         * Evens pick right then left
 * Conditional critical region
   * when B do S (B is shared)
-  * Semantcs
+  * Semantics
     1. While S is being executed no other process can access shared variables V
     2. B is a boolean expression
       * Mutual exclusion
@@ -682,7 +683,7 @@
 	* Optimal (minimum average waiting time for a set of processes)
 	* Problem: Determining the next CPU burst is impossible
 	* Solution: Approximate burst time
-	  * T_{n + 1} = a*t_n + (1 - a)*T_n; T <-- predicted, t <-- actual
+	  * T_{n + 1} = a\*t_n + (1 - a)*T_n; T <-- predicted, t <-- actual
 	* Preemptive version: Shortest remaining time first (based on arrival)
   * Priority scheduling
     * SJF is a special case of priority scheduling
@@ -694,7 +695,7 @@
 * Pre-emptive/non-preemptive
   * Priority Scheduling
     * Starvation possible with low-priority processes
-    * Solution: Aging --> gradually increase priority of waiting processes
+    * Solution: Aging → gradually increase priority of waiting processes
   * Priority Inversion: High priority process(es) waiting for low priority one
     * What if?
       * High priority process trying to access to shared data
@@ -708,11 +709,11 @@
       * VxWorks: Preemptive priority scheduling
       * Problem: Information bus: Shared info & passing info; controlled by lock
       * Tasks: 
-        B) Bus management --> Runs frequently with high priority
-	M) Meteorologist --> Low priority, infrequent
-	C) Communications --> Medium priority, long running
+        B) Bus management → Runs frequently with high priority
+	M) Meteorologist → Low priority, infrequent
+	C) Communications → Medium priority, long running
       * What happened:
-        (M) got lock, (B) tries to acquire the lock --> sleep, (C) is scheduled;
+        (M) got lock, (B) tries to acquire the lock → sleep, (C) is scheduled;
 	(M) and (C) in ready queue, but (M) couldn't release the lock because it
 	was lower priority than (C) so couldn't run
   * Round-robin scheduling
@@ -727,13 +728,14 @@
       * Scheduler picks first process in the ready queue and sets the timer to
         interrupt after one time slice
       * Two options
-        1) t < t_{slice} --> process releases CPU voluntarily and schedule
-	   proceeds with the next process;
-	2) t > t_{slice} --> Upon timer interrupt, context switch, tail of ready
+        1. t < t\_{slice} → process releases CPU voluntarily and schedule
+	       proceeds with the next process
+	    2. t > t_{slice} → Upon timer interrupt, context switch, tail of ready
     * Average waiting time is often quite long 
     * Performance depends heavily on the value of t_{slice}
       * Comparable with context-switch overhead
-      * Large t_{slice} --> FCFS
+      * Large t_{slice} → FCFS
+
 ### For Exam 1, we stop after Round Robin
 
 # Wed, February 22
@@ -759,7 +761,7 @@
   * Memory management tasks run at priority 0
   * A queue is used for each priority
     * Traversed from highest to lowest
-    * No ready threads found --> Run special idle thread
+    * No ready threads found → Run special idle thread
   * User API (classes) (base priorities in parentheses)
     * Real-time (24)
     * High priority (13)
@@ -793,7 +795,7 @@
     * Memory: Large array of words/bytes, each with an address
     * Instruction cycle:
       * Instruction fetched from _memory_
-      * Instruction decoded --> May cause operands to be teched from memory
+      * Instruction decoded → May cause operands to be teched from memory
       * Once executed, results may be stored in memory
     * Memory Unit: Only sees memory addresses; does not know encoding
     * Address Binding
@@ -886,7 +888,7 @@
 	* Logical address is a tuple (segment #, offest)
   * Problem: Segments are allocated contiguously
   * Solution: Segmentation with paging
-    * Each segment has a page table --> Segment is allocated non-contiguously
+    * Each segment has a page table → Segment is allocated non-contiguously
 ##Chapter 9: Virtual Memory
 * Allows execution of processes that may not be completely in memory
   * Programs can be larger than physical memory
