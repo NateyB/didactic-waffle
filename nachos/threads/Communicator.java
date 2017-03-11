@@ -96,11 +96,11 @@ public class Communicator
 
 
         int word = spokenWord;
-        inSpeech = false;
         numListeners--;
+        inSpeech = false;
 
         // Wake all of the remaining speakers to ensure that the process continues
-        sVariable.wakeAll();
+        sVariable.wake();
         moving.release();
 
         return word;

@@ -141,18 +141,18 @@
   * Timer interrupts (preemptive)
   * Transfer control to OS (privileged mode)
     * OS prepares system for next job (context-switch)
-  * I/O Protection => [I/O Instructions privileged]
+  * I/O Protection → [I/O Instructions privileged]
   * Memory protection: Memory unit will check whether address is "valid"
 * OS components/structures
   * Process management (process control)
-    * Process => Instance of a program in execution
+    * Process → Instance of a program in execution
   * Create/Delete (user/system processes)
   * Suspending/resuming processes
   * Process synchronization (semaphore)
   * Process communication
   * Avoid deadlock (wait event, signal event)
   * Main memory management
-    * Main memory => Central to operations of a computing system
+    * Main memory → Central to operations of a computing system
 	* Repository of quickly accessible data
 	* Must keep more than one program in memory
 	* Functions
@@ -301,7 +301,7 @@
       * Drawback: If kernel is single-threaded and user-level kernel makes a
         blocking system call, then the **entire process blocks**
     * Kernel threads
-      * Supported directly by kernel (kernel => thread creation/execution
+      * Supported directly by kernel (kernel → thread creation/execution
         scheduling)
       * Disadvantage: Comparably slow compared to user-level support
       * Advantage: The kernel can continue even if a blocking call is made
@@ -381,7 +381,7 @@
     * Each process must request permission to enter its critical section
     * Permission request done in entry section
     * Critical section may be followed by an exit section
-    * Remaining code => Remainder section
+    * Remaining code → Remainder section
   * Typical process:
         Do {
           entry section
@@ -403,28 +403,28 @@
            do {
              while (turn ≠ i);
              critical_section
-             turn = j
+             turn ← j
              remainder_section
            } while (true)
       * Mutual exclusion: Satisfied
       * Progress: Not satisfied
     2. Boolean flag[2]
            do {
-             flag[i] = true
+             flag[i] ← true
              while flag[j];
              C-section
-             flag[i] = false
+             flag[i] ← false
              remainder
            } while (true)
       * Mutual exclusion: Satisfied
       * Progress: Not satisfied
     3. Peterson's Solution (two processes) (turn, flag[])
            do {
-             flag[i] = true
-             turn = j
+             flag[i] ← true
+             turn ← j
              while (flag[j] && turn == j);
              C-section
-             flag[i] = false
+             flag[i] ← false
              remainder
            } while (true)
       * Mutual exclusion: Satisfied
@@ -443,8 +443,8 @@
   * Test And Set (guaranteed atomicity)
          boolean TestAndSet(boolean &target)
 	     {
-	       boolean rv = target;
-	       target = true;
+	       boolean rv ← target;
+	       target ← true;
 	       return rv;
 	     }
     * We return the value that we test, and then set to true (side-effects)
@@ -452,17 +452,17 @@
           do {
 	        while (TestAndSet(lock));
 	        C-section
-	        lock = false
+	        lock ← false
 	        remainder
 	      } while (true)
     * Solution to critical section prolem:
 	      bool waiting[], bool key, lock
           do {
-	        waiting[i] = true
-	        key = true
+	        waiting[i] ← true
+	        key ← true
 	        while (waiting[i] && key)
-	          key = TestAndSet(lock)
-	        waiting[i] = false
+	          key ← TestAndSet(lock)
+	        waiting[i] ← false
 	        C-section
 	      } while (true)
     * Bounded waiting
@@ -476,17 +476,17 @@
 	      remainder
   * Swap
          void swap(boolean &a, boolean &b) {
-	       boolean temp = a;
-	       a = b;
-	       b = temp;
+	       boolean temp ← a;
+	       a ← b;
+	       b ← temp;
 	     }
     * Mutual exclusion
           do {
-	        key = true
+	        key ← true
 	        while (key)
 	        swap(lock, key)
 	        C-section
-	        lock = false
+	        lock ← false
 	        remainder
 	      } while (true)
 
@@ -497,12 +497,12 @@
 	* Wait (P): `wait(S) { while (S <= 0); S--; }` (bad because busy-watiting)
 	* Signal (V): `signal(S) { S++; }`
 	* Typically, but not necessarily, initialized to 1
-	* Mutual exclusion (S <-- 1): `do {wait(S); C-section signal(S) remainder}
+	* Mutual exclusion (S ← 1): `do {wait(S); C-section signal(S) remainder}
 	  while (true);`
 * Synchronization problem
   * P1, P2 concurrent with statements S1, S2, respectively. Execute S2 only
     after S1.
-  * Solution: P1, P2 share a semaphore <-- 0; `P1: S1 signal(synch); P2
+  * Solution: P1, P2 share a semaphore ← 0; `P1: S1 signal(synch); P2
     wait(synch) S2;`
   * A deadlock affects a _set_ of threads
   * Starvation, however, is only one process (waiting indefinitely within a
@@ -514,8 +514,8 @@
   * Operations:
     * Sleep: Release the lock and sleep on this condition variable until some
 	  other thread wakes it; acquire the lock before returning from sleep.
-	  Note: Semaphore: Wait only sleeps thread if value is nonpositive;
-	  Lock: Acquire only sleeps if the lock is busy
+	  * Semaphore: Wait only sleeps thread if value is nonpositive;
+	  * Lock: Acquire only sleeps if the lock is busy
 	* Wake: Wakes at most one thread sleeping on the lock
 	* WakeAll: Wakes all the threads sleeping on the condition variable
 
@@ -571,8 +571,8 @@
         * Readers may starve
     * Solutions using semaphores:
       * First reader-writer:
-        * Mutex, write <-- 1 (semaphores)
-        * readcount <-- 0 (int)
+        * Mutex, write ← 1 (semaphores)
+        * readcount ← 0 (int)
         * Reader
                {
                  wait(mutex);
@@ -633,8 +633,8 @@
                if (true) -> S is executed
                else sleep until no process is in S
         * How? (Using locks and conditional variables, obvi)
-               Lock myLock = new Lock();
-               Condition myCond = new Condition(myLock);
+               Lock myLock ← new Lock();
+               Condition myCond ← new Condition(myLock);
                myLock.acquire();
                while (!B)
                  myCondition.sleep();
@@ -683,7 +683,7 @@
 	* Optimal (minimum average waiting time for a set of processes)
 	* Problem: Determining the next CPU burst is impossible
 	* Solution: Approximate burst time
-	  * T_{n + 1} = a\*t_n + (1 - a)*T_n; T <-- predicted, t <-- actual
+	  * T_{n + 1} ← a\*t_n + (1 - a)*T_n; T ← predicted, t ← actual
 	* Preemptive version: Shortest remaining time first (based on arrival)
   * Priority scheduling
     * SJF is a special case of priority scheduling
@@ -708,7 +708,7 @@
       * Embedded controllers: Watchdog timer
       * VxWorks: Preemptive priority scheduling
       * Problem: Information bus: Shared info & passing info; controlled by lock
-      * Tasks: 
+      * Tasks:
         B) Bus management → Runs frequently with high priority
 	M) Meteorologist → Low priority, infrequent
 	C) Communications → Medium priority, long running
@@ -731,7 +731,7 @@
         1. t < t\_{slice} → process releases CPU voluntarily and schedule
 	       proceeds with the next process
 	    2. t > t_{slice} → Upon timer interrupt, context switch, tail of ready
-    * Average waiting time is often quite long 
+    * Average waiting time is often quite long
     * Performance depends heavily on the value of t_{slice}
       * Comparable with context-switch overhead
       * Large t_{slice} → FCFS
@@ -785,7 +785,7 @@
     * Current window of interaction also gets a priority boost
   * For processes in the normal priority class, Windows distinguishes between a
     foreground process and background proccesses
-      * Foreground process time_{slice} = 3*Background process time_{slice}
+      * Foreground process time_{slice} ← 3*Background process time_{slice}
 
 # Fri, February 24
 ## Second Part of Class: Memory
@@ -883,7 +883,7 @@
 * Segmentation
   * Users prefer to view memory as a collection of variable-sized segments
     where each segment represents a different part or component of a program
-  * Logical address space => Collection of segments
+  * Logical address space → Collection of segments
     * Each segment will have a name (a number) and a length
 	* Logical address is a tuple (segment #, offest)
   * Problem: Segments are allocated contiguously
@@ -981,3 +981,17 @@
 	* Priority (preemptive, non-preemptive)
 	  * Priority inversion
     * Round-robin
+
+# Friday, March 10
+* Evaluating page replacement
+  * Use "reference strings" generated randomly (represent access ops)
+  * For a given page size, we need only to consider the page number
+  * If we have  areference to page p, then any immediately following references
+    to p will never cause a page fault
+  * FIFO Page replacement
+    * FIFO algorithm
+	  * Associate/keep track of "time" when page was loaded into memory
+	  * When a page must be replaced, the oldest one is chosen
+	  * % of page replacement: (#pages needing replacement)/(#pages loaded)
+  * Belady's Anomaly: Page fault rate may increase as number of allocated frames
+    increases
