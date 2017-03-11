@@ -99,7 +99,7 @@ public class Communicator
         numListeners--;
         inSpeech = false;
 
-        // Wake all of the remaining speakers to ensure that the process continues
+        // Wake the next speaker to ensure that the process continues
         sVariable.wake();
         moving.release();
 
