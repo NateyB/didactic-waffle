@@ -995,3 +995,153 @@
 	  * % of page replacement: (#pages needing replacement)/(#pages loaded)
   * Belady's Anomaly: Page fault rate may increase as number of allocated frames
     increases
+
+# Monday, March 20
+* Page replacement (cont.)
+  * OPT: Optimal Page Repacement (MIN):
+    * Replace the page that will not be used for the longest amount of time
+	* His algorithm for doing this makes no sense. He iterates through each
+      possible page to replace, going until the next occurence of that page
+	  to find the page that will not be used for the longest; he should just
+	  iterate through each, checking if it is a page replacement, and then stop
+	  when he's found instances for all but 1 of the candidate pages to replace
+	  the candidate page that he has not found an instance for
+	* Difficult to implement (requires knowledge about the future)
+	* Good to use for comparison with other algorithms
+	* You can also try to approximate it
+	  * LRU page replacement (Least Recently Used) (trying to approximate OPT)
+	    * Considered good, often used
+  * Summary
+    * FIFO: Replace page that's been in table for the longest time
+	* OPT: Replace page that will not be used for the longest time
+	* LRU: Based on past history, replace the page that has not been used for
+      the longest time
+* Allocation of frames
+  * How do we allocate free memory among various processes?
+  * Minimum # of pages
+    * We know we cannot allocate more than total number of frames
+	* We must allocate at least a minimum number of frames
+	* Minimum # determined by instruction set
+	  * All pages used by instruction causing page fault must be in memory
+	  * Worst case: Computer architectures with multiple levels of indirection
+	    * PDP-11: Move operation that required 6 frames
+		* IBM-370: Move instruction that may require 8 frames
+  * Summary
+    * Minimum: Determined by the architecture of the CPU that we're using
+	* Maximum: Determined by the amount of physical memory that we have
+	* The number of frames that we allocate is somewhere between these two
+	  * Many algorithms in between
+  * Equal allocation
+    * m = # of frames
+	* n = # of processes
+	* We allocate m/n frames/process
+  * Proportional allocation
+    * S\_i = size of process/size of all processes, S
+	* We allocate S\_i/S*m frames for process i
+
+
+# Monday, March 27
+* Filesystems (cont.)
+  * Minimal set of 6 operations
+    * Renaming, copying, moving, appending (notably not 6...)
+  * Most operations require search in directory (takes time)
+    * OS keeps open file tables:
+	  * Preprocess table
+	  * System wide table: Count (increased with open, decreased with close)
+	  * Several processes may open the same file
+  * File types
+    * Support of file types help avoid problems
+	  * Printing a binary file
+	* May be done by adding extensions to the filename (hints; not strong)
+	* In UNIX, some files include a "magic number" int indicating type of file
+  * File structure
+    * Certain files _must_ conform to a certain structure (i.e., executables)
+	* Disadvantage
+	  * Support for too many file structures makes OS cumbersome
+	* Problem: How about applications requiring files not structured in ways
+	  supported by OS?
+	  * Txt and exe files are not really appropriate for encrypted files
+	* OSes support a minimal set of file structures
+	  * All OSes support at least one file structure: Executable
+    * Internal file structure
+	  * Disk I/O operations are performed in units of one one-sized block
+	  * Logical record length != physical record length
+	  * Logical -> physical = packing
+	  * Physical -> logical = unpacking
+	  * UNIX: Each byte in a file is individually addressable by its offset
+	    from the beginning of the file
+	    * Logical record length is one byte
+		* But the OS/File system packing & unpacking into physical blocks
+		  (transparent to the user)
+	  * Summary:
+		* Files may be considered to be a sequence of blocks
+		* All I/O operations (on record storage) done in blocks
+		* Internal fragmentation is possible in the last block of file
+  * Access Methods
+    * Sequential access
+	  * Information is processed in order, one record after another
+	  * Most common (editors, compilers)
+	  * File pointer to keep track of position
+	  * Based on "tape model of a file" (think of machines)
+	* Direct access
+	  * Files constituted by fixed-length logical records
+	  * Based on the "disk model of a file"
+	  * Provides immediate access to information
+	  * Used by databases
+	* It is easier to simulate sequential access having a direct access device
+  * Directory Structure
+    * Disk may store large amounts of files (we need to organize them)
+	* Organization (2 parts)
+	  * Arrange partitions (Split drive, merge)
+	  * Information about files within partition stored in a deevice directory
+	    (another directory) or volume table of contents
+	* Directory: A symbol table translating file names into their directory
+	  entries
+	* Operations on a directory
+	  * Search for a file
+	  * Create
+	  * Delete
+	  * List
+	  * Rename
+	  * Traverse file system
+
+# Wednesday, March 29
+  * **Test 2 Content:** Everything after Test 1, before filesystems
+  * Directories (cont.)
+    * Single level directory
+	  * Simplest structure: All files in the same directory (easy to understand
+	    and implement)
+	  * Directory names have limits:
+	    * MS-DOS: 11 characters (8 name + 3 extension)
+		* UNIX: 255 characters
+	  * Not very practical for common use
+	    * No organization
+	  * Confusing if multiple users storing files
+	  * May run out of names?
+	* Two-level directory
+	  * Create a separate one-level directory for each user
+	  * Two or more users can have files with same name
+	  * Special entry for OS/System
+	  * Need syntax to access files
+	    * May be different for different OSes (C:\ vs /)
+	  * Still need more to help organize files
+	* Tree-structured directory
+	  * Generalization; absolute/relative paths are the same
+	* DAG directories (UNIX, Windows)
+	  * Sharing directories (what to do?)
+	    * UNIX: Link -> Pointer to another file or directory
+		* Issue: Problem is that cycles are allowed, so filepaths not
+		  necessarily unique
+		* UNIX: Hard links & soft links; Windows: Soft links only
+	    * Hard link: Permission changes on one directory is immediately
+		  refected on the other directories to which that one is hard-linked
+		  * Keep count of references; the count is decremented when the
+		    entry is deleted (deallocating when the count hits 0)
+		  * Must reside in the same file system
+		* Soft link:
+		  * Type of file: Contents are a path to another directory
+		  * Removing original results in an orphan link
+	    * Directories (UNIX):
+		  * Initially populated with 2 files
+		    * . & ..
+			* These are hard links
