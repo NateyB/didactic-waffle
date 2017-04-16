@@ -16,4 +16,7 @@ hs_err_pid*
 nachos/
 Projects.iml
 
+out/
 !/nachos/threads/KThread.java
+!/nachos/threads/Boat.java
+!/nachos/threads/PriorityScheduler.java

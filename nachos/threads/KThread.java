@@ -32,7 +32,7 @@ import nachos.machine.TCB;
 public class KThread
 {
     private boolean isJoined = false;
-    private static ThreadQueue sleeping = ThreadedKernel.scheduler.newThreadQueue(false);
+    private static ThreadQueue sleeping = ThreadedKernel.scheduler.newThreadQueue(true);
 
     /**
      * Get the current thread.
@@ -48,6 +48,8 @@ public class KThread
     /**
      * Allocate a new <tt>KThread</tt>. If this is the first <tt>KThread</tt>,
      * create an idle thread as well.
+     *
+     * Either way, this thread is now the top of the threadqueue.
      */
     public KThread()
     {
@@ -66,6 +68,10 @@ public class KThread
 
             createIdleThread();
         }
+
+        boolean intStatus = Machine.interrupt().disable();
+        sleeping.acquire(this);
+        Machine.interrupt().restore(intStatus);
     }
 
     /**
@@ -303,11 +309,15 @@ public class KThread
     {
         if (status == statusFinished || isJoined)
             return;
+
         Lib.debug(dbgThread, "Joining to thread: " + toString());
 
         Lib.assertTrue(this != currentThread);
 
         boolean intStatus = Machine.interrupt().disable();
+
+        if (status == statusNew)
+            ready();
 
         sleeping.waitForAccess(currentThread);
         isJoined = true;
@@ -465,7 +475,7 @@ public class KThread
     /**
      * Additional state used by schedulers.
      *
-     * @see nachos.threads.PriorityScheduler.ThreadState
+     * @see PriorityScheduler.ThreadState
      */
     public Object schedulingState = null;
 
