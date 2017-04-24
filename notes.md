@@ -1279,4 +1279,101 @@ Chapter 11: File system implementation
 			* Double indirect
 			* Triple indirect
 
+# Monday, April 17
+* RAID (Redundant Array of Indepent Disks) Arrays
+  * RAID 0: "Striping"
+    * n disks (minimum of 2)
+	* space efficiency: n
+	* Fast
+	* Disk failure/error => entire array is lost
+  * RAID 1: "Mirroring"
+    * n disks that are the same
+	* High fault tolerance: Array operates as long as there is one drive
+  * RAID 2: "Hamming Code Parity"
+    * Bit striping with error codes
+	* Minimum of 3 disks
+	* Parity bits in the third disk
+	* Won't be used (most disks have parity bits)
+  * RAID 3: Byte-level striping
+    * Space: n - 1 (one dedicated parity disk)
+	* Minimum # of disks: 3
+	* Improved performance/fault tolerance
+	* Parity => bottleneck for concurrent operations
+	* If parity drive fails, the array still works
+  * RAID 4: Block-level striping, dedicated parity
+    * Parity drive may also be a bottleneck
+  * RAID 5: Striped set with distributed parity
+    * 3 disk minimum
+	* n - 1 efficiency
+	* A1 A2 A3 Ap; B1 B2 Bp B4; C1 Cp C2 C3; Dp D1 D2 D3
+	* All drives but one needed to operate
+  * RAID 6: Striped set with dual distributed parity
+    * 4 disk minimum
+	* Efficiency: n - 2
+	* Up to two drives fail, and still operate
+
+# Monday, April 24
+* Exam review
+  * Chapter 1: Intro to operating systems & computer organization
+    * What's an OS? (Different definitions)
+    * Types
+	* Computer operations: Bootstrap loads OS, interrupts/traps
+	* Components: Main memory, direct memory access, dual-mode of operation
+	* Proteection: CPU, memory, I/O
+  * Chapter 2: OS Structures
+    * Management: Processes, main memory, etc.
+	* Services for programs: Program execution, files, protection
+	* System calls: Concept
+  * Chapter 3: Processes
+    * Concept/PCB (Process control block): Context switch, threads, scheduling
+	* Operations on processes: Creation, execution, (fork & join), termination
+	* Cooperating processes: Producer-consumer problem
+	* Interprocess communication: Message passing, (in)direct and (a)symmetric
+	* Synchronization/communication: Non-blocking send/receive, buffering
+  * Chapter 4: Threads
+    * Overview/benefits, user vs kernel, and modes (1:1, m:1, m:n)
+	* Cancellation (asynchronous/deferred)
+	* Signal handling
+	* Threads tutorial (Java threads)
+  * Chapter 6: Process synchronization
+    * RACE conditions
+	* Critical section problem and solution: Mutual exclusion, bounded waiting,
+	  and progress
+	* Algorithms; primitives (lock, testAndSet, swap, semaphores)
+	* Classic problems of synchronization
+	* Condition variables, conditional critical region
+  * Chapter 5: CPU scheduling
+    * Goal: Maximize CPU usage (CPU & IO bursts)
+	* CPU Scheduler: Preemptive vs non-preemptive (4 conditions)
+	* Scheduling criteria
+	* Algorithms
+	  * FIFO (non-preemptive)
+	  * SJF (both)
+	  * Priority (both); priority inversion
+	  * Round robin
+	  * Multilevel feedback queue
+	  * Windows' "dispatcher"
+  * Chapter 8: Memory management
+    * Instruction cycle
+	* Address binding
+	* Optimization: Dynamic loading & dynamic linking
+	* Memory allocation
+	  * Contiguous: External fragmentation
+	  * Noncontiguous: Paging, segmentation, segmentation with paging
+  * Chapter 9: Virtual memory
+    * Good things; effective access time
+	* Overallocation: Page replacement (FIFO, OPT, LRU)
+	* Frame allocation: Min, max; Equal or proportional allocation
+  * Chapter 10: File system interface
+    * What is it?
+	* Files; file tables: System-wide and per-process; access methods
+	* Directory structures: Single-level, duual-level, trees, DAGs
+	* File permissions
+  * Chapter 11: File system implementation
+    * Layered; in-disk or in-memory
+	* Operations: File creation, access, opening, deletion
+	* Directory implementation: Linear list, hash table
+	* Allocation methods: Contiguous, linked list, file allocation table, index
+	  * Multilevel index
+	  * A combination: inode, UNIX
 
