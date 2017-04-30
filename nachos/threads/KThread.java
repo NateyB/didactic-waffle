@@ -31,8 +31,7 @@ import nachos.machine.TCB;
  */
 public class KThread
 {
-    private boolean isJoined = false;
-    private static ThreadQueue sleeping = ThreadedKernel.scheduler.newThreadQueue(true);
+    private ThreadQueue sleeping = ThreadedKernel.scheduler.newThreadQueue(true);
 
     /**
      * Get the current thread.
@@ -48,7 +47,7 @@ public class KThread
     /**
      * Allocate a new <tt>KThread</tt>. If this is the first <tt>KThread</tt>,
      * create an idle thread as well.
-     *
+     * <p>
      * Either way, this thread is now the top of the threadqueue.
      */
     public KThread()
@@ -219,12 +218,18 @@ public class KThread
         toBeDestroyed = currentThread;
 
         currentThread.status = statusFinished;
-
-        KThread next;
-        if ((next = sleeping.nextThread()) != null)
-            next.ready();
+        currentThread.complete();
 
         KThread.sleep();
+    }
+
+    /**
+     * Run the necessary operations to complete the current thread
+     */
+    private void complete() {
+        KThread next;
+        while ((next = sleeping.nextThread()) != null)
+            next.ready();
     }
 
     /**
@@ -307,7 +312,7 @@ public class KThread
      */
     public void join()
     {
-        if (status == statusFinished || isJoined)
+        if (status == statusFinished)
             return;
 
         Lib.debug(dbgThread, "Joining to thread: " + toString());
@@ -320,7 +325,6 @@ public class KThread
             ready();
 
         sleeping.waitForAccess(currentThread);
-        isJoined = true;
         KThread.sleep();
 
         Machine.interrupt().restore(intStatus);

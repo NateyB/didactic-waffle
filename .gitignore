@@ -20,3 +20,8 @@ out/
 !/nachos/threads/KThread.java
 !/nachos/threads/Boat.java
 !/nachos/threads/PriorityScheduler.java
+!/nachos/threads/Alarm.java
+!/nachos/threads/Communicator.java
+!/nachos/threads/Condition2.java
+!/nachos/userprog/UserKernel.java
+!/nachos/userprog/UserProcess.java
