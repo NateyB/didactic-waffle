@@ -1043,7 +1043,7 @@
 # Monday, March 27
 * Filesystems (cont.)
   * Minimal set of 6 operations
-    * Renaming, copying, moving, appending (notably not 6...)
+    * Creating, writing, reading, repositioning, deleting, truncating
   * Most operations require search in directory (takes time)
     * OS keeps open file tables:
 	  * Preprocess table
