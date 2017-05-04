@@ -1046,7 +1046,7 @@
     * Creating, writing, reading, repositioning, deleting, truncating
   * Most operations require search in directory (takes time)
     * OS keeps open file tables:
-	  * Preprocess table
+	  * Per-process table
 	  * System wide table: Count (increased with open, decreased with close)
 	  * Several processes may open the same file
   * File types
@@ -1093,7 +1093,7 @@
     * Disk may store large amounts of files (we need to organize them)
 	* Organization (2 parts)
 	  * Arrange partitions (Split drive, merge)
-	  * Information about files within partition stored in a deevice directory
+	  * Information about files within partition stored in a device directory
 	    (another directory) or volume table of contents
 	* Directory: A symbol table translating file names into their directory
 	  entries
@@ -1134,7 +1134,7 @@
 	  necessarily unique
 	* UNIX: Hard links & soft links; Windows: Soft links only
 	* Hard link: Permission changes on one directory is immediately
-	  refected on the other directories to which that one is hard-linked
+	  reflected on the other directories to which that one is hard-linked
 	  * Keep count of references; the count is decremented when the
 		entry is deleted (deallocating when the count hits 0)
 	  * Must reside in the same file system
@@ -1154,12 +1154,12 @@ Chapter 11: File system implementation
 	* Access to any block: Simple to use for sequential and direct access
 	* I/O transfers are by blocks (4096 bytes)
   * OS imposes a file system on the disk
-    * Design problems: How does the file look ot users; algorithms (such as
+    * Design problems: How does the file look to users; algorithms (such as
 	  the logical/physical mapping)
 	* Generally layered
-	  * Devices .................. disks
-	  * I/O Control .............. device drivers (retrieve block 123)
-	  * Basic file system ........ generic commands (read/write physical block)
+	  * Devices .................. Disks
+	  * I/O Control .............. Device drivers (retrieve block 123)
+	  * Basic file system ........ Generic commands (read/write physical block)
 	  * File organization module . Knows about files and their logical blocks
 	  * Logical file system ...... Manages file metadata; directories; file
 	    structure (FCB---file control block) such as ownership, permissions,
@@ -1336,7 +1336,7 @@ Chapter 11: File system implementation
 	* Signal handling
 	* Threads tutorial (Java threads)
   * Chapter 6: Process synchronization
-    * RACE conditions
+    * Race conditions
 	* Critical section problem and solution: Mutual exclusion, bounded waiting,
 	  and progress
 	* Algorithms; primitives (lock, testAndSet, swap, semaphores)
@@ -1367,7 +1367,7 @@ Chapter 11: File system implementation
   * Chapter 10: File system interface
     * What is it?
 	* Files; file tables: System-wide and per-process; access methods
-	* Directory structures: Single-level, duual-level, trees, DAGs
+	* Directory structures: Single-level, dual-level, trees, DAGs
 	* File permissions
   * Chapter 11: File system implementation
     * Layered; in-disk or in-memory
